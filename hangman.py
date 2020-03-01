@@ -4,6 +4,7 @@ from colorama import init
 init(autoreset=True)
 
 sentences= get_proverbs()
+#sentences=['abc']
 hangman ={1: '', 2: '/', 3: '/\\', 4: '|\n|\n|\n/\\', 5: '____\n|  \n|\n|\n/\\', 6: '____\n|  |\n|\n|\n/\\', 7: '____\n|  |\n|  o\n|\n/\\', 8: '____\n|  |\n|  o\n|  |\n/\\', 9: '____\n|  |\n|  o\n| /|\n/\\', 10: '____\n|  |\n|  o\n| /|\\\n/\\', 11: '____\n|  |\n|  o\n| /|\\\n/\\/', 12: '____\n|  |\n|  o\n| /|\\\n/\\/ \\'}
 
 def main():
@@ -23,7 +24,6 @@ def main():
             chance = chance
         else:
             chance = chance+1 
-        
         print('\033[33m' + hangman[chance]) # print hangman appropiate to chance
         
         if str(sentenceToGuessMask) == sentenceToGuess:
@@ -32,6 +32,7 @@ def main():
             key=input()
             if key=='y':
                 main()
+            break
              
     else:
         print('\033[31m'+"\nGAME OVER :( \nProverb: " + str(sentenceToGuess))        
@@ -39,8 +40,6 @@ def main():
         key=input()
         if key=='y':
             main()
-        
-
             
 def replace_with_letter(letter, sentence, sentenceMask): #replace mask ____ with letter when letter match sentence letter
     sentence = list(sentence)
