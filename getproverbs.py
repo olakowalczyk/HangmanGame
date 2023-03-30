@@ -2,28 +2,29 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_proverbs():  # gets proverbs from website
+def get_proverbs(): 
+    """ 
+        Gets proverbs from website 
+    """
     url = "https://www.phrases.org.uk/meanings/proverbs.html"
-    res = requests.get(url)
-    html_page = res.content
-
+    response = requests.get(url)
+    html_page = response.content
     soup = BeautifulSoup(html_page, 'html.parser')
     elements = soup.findAll('p', attrs={'class': 'phrase-list'})
-
-    proverb_list = []
-    proverb_list = extract_proverbs(proverb_list, elements)
+    proverb_list = _extract_proverbs(elements)
     return proverb_list
 
 
-# eliminates proverbs with some annotation etc.
-def extract_proverbs(proverb_list, elements):
+def _extract_proverbs(elements):
+    """
+        Eliminates proverbs with some annotation etc.
+    """
+    substrings = [" - ", ";", "]", ".", "?", "nowt"]
+    proverb_list = list()
     for element in elements:
-        element.getText()
-        proverb_list.append(element.getText())
-
-    subs = [" - ", ";", "]", ".", "?", "nowt"]
-    for i in proverb_list[:]:
-        for sub in subs[:]:
-            if sub in i:
-                proverb_list.remove(i)
+        text = element.getText().strip()
+        if any(sub in text for sub in substrings):
+            continue
+        else:
+            proverb_list.append(text)
     return proverb_list
