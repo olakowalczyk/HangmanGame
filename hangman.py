@@ -1,80 +1,95 @@
 import random
+from string import ascii_letters as letters
 from getproverbs import get_proverbs
 from colorama import init
 init(autoreset=True)
 
 sentences = get_proverbs()
-hangman = {1: '', 2: '/', 3: '/\\', 4: '|\n|\n|\n/\\', 5: '____\n|  \n|\n|\n/\\', 6: '____\n|  |\n|\n|\n/\\', 7: '____\n|  |\n|  o\n|\n/\\', 8: '____\n|  |\n|  o\n|  |\n/\\',
-           9: '____\n|  |\n|  o\n| /|\n/\\', 10: '____\n|  |\n|  o\n| /|\\\n/\\', 11: '____\n|  |\n|  o\n| /|\\\n/\\/', 12: '____\n|  |\n|  o\n| /|\\\n/\\/ \\'}
+hangman = { 1 : '', 
+            2 : '/', 
+            3 : '/\\', 
+            4 : '|\n|\n|\n/\\', 
+            5 : '____\n|  \n|\n|\n/\\', 
+            6 : '____\n|  |\n|\n|\n/\\', 
+            7 : '____\n|  |\n|  o\n|\n/\\', 
+            8 : '____\n|  |\n|  o\n|  |\n/\\',
+            9 : '____\n|  |\n|  o\n| /|\n/\\', 
+            10 : '____\n|  |\n|  o\n| /|\\\n/\\', 
+            11 : '____\n|  |\n|  o\n| /|\\\n/\\/', 
+            12 : '____\n|  |\n|  o\n| /|\\\n/\\/ \\'
+          }
+colors = {'orange' : '\033[33m',
+          'green' : '\033[32m',
+          'red' : '\033[31m' ,
+          'purple' : '\033[35m}', 
+          'blue' : '\33[36m'}
 
 
 def main():
-    sentenceToGuess = sentence()  # get random sentence
-    # hides the sentence to the player
-    sentenceToGuessMask = mask_sentence(sentenceToGuess)
-    print("\nGuess the proverb: " + sentenceToGuessMask + "\nYou have 11 chances")
+    sentence_to_guess = sentence()
+    hidden_sentence_to_guess = mask_sentence(sentence_to_guess)
+    print(colors['blue'] + f"\nGuess the proverb: {hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
     chance = 1
+    max_chances = 11
 
-    while chance <= 11:  # check the letter till chances are available
-        print("\n===== Chance " + str(chance) + " =====")
-        letter = provide_value("\nProvide one letter: ")
-        sentenceToGuessMask = replace_with_letter(
-            letter, sentenceToGuess, sentenceToGuessMask)
-        sentenceToGuessMask = ''.join(sentenceToGuessMask)
-        print("\n" + str(sentenceToGuessMask) + "\n")
+    while chance <= max_chances:
+        print(f"\n===== Remaining chances: {max_chances - chance + 1} =====")
+        letter = provide_value()
+        hidden_sentence_to_guess = replace_with_letter(letter, sentence_to_guess, hidden_sentence_to_guess)
+        print(colors['blue'] + f"\n{hidden_sentence_to_guess}\n")
 
-        # chance do not increment where letter match
-        if letter in sentenceToGuess and len(letter) == 1:
-            chance = chance
-        else:
-            chance = chance + 1
-        # print hangman appropiate to chance
-        print('\033[33m' + hangman[chance])
+        chance = chance if letter in sentence_to_guess else chance + 1
+        print(colors['orange'] + hangman[chance])
 
-        if str(sentenceToGuessMask) == sentenceToGuess:
-            print('\033[32m' + "\nYOU WIN :)")
-            print("\nPlay again? (y)")
-            key = input()
+        if hidden_sentence_to_guess == sentence_to_guess:
+            print(colors['green'] + f"\nCongratulations! :) That's the proverb: {sentence_to_guess}")
+            key = input("Play again? (y) ")
             if key == 'y':
                 main()
-            break
-
+            else:
+                print("Thanks for playing")
+                break
     else:
-        print('\033[31m' + "\nGAME OVER :( \nProverb: " + str(sentenceToGuess))
-        print("\nPlay again? (y)")
-        key = input()
+        print(colors['red'] + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {sentence_to_guess}")
+        key = input("Play again? (y) ")
         if key == 'y':
             main()
+        else:
+            print("Thanks for playing")
 
 
-# replace mask "____" with letter when letter match sentence letter
-def replace_with_letter(letter, sentence, sentenceMask):
+
+def replace_with_letter(letter, sentence, hidden_sentence):
+    """ 
+        replace mask "_" with letter when letter match sentence letter
+    """
     sentence = list(sentence)
-    sentenceMask = list(sentenceMask)
-    index_l = -1
+    hidden_sentence = list(hidden_sentence)
 
-    for l in sentence:
-        index_l = index_l + 1
+    for idx, l in enumerate(sentence):
         if l == letter:
-            sentenceMask[index_l] = letter
-        if l == letter.capitalize():
-            sentenceMask[index_l] = letter.capitalize()
-    return sentenceMask
+            hidden_sentence[idx] = letter
+        elif l == letter.capitalize():
+            hidden_sentence[idx] = letter.capitalize()
+    return ''.join(hidden_sentence)
 
 
-def provide_value(desc):  # provides letter
-    value = input(desc)
-    return value
+def provide_value():
+    while True:
+        value = input("\nProvide one letter: ")
+        if value in letters and len(value) == 1:
+            return value
+        else:
+            print("It's not a letter. Please provide one letter")
 
 
-def sentence():  # draws sentence
-    sentence = random.choice(sentences)
-    return sentence
+def sentence():
+    return random.choice(sentences)
 
 
-def mask_sentence(sentence):  # provides masked sentence
+def mask_sentence(sentence):
     for l in sentence:
-        if l != ' ' and l != "’" and l != ',' and l != '\'':
+        if l.isalpha():
             sentence = sentence.replace(l, '_')
     return sentence
 
