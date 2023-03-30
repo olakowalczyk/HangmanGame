@@ -1,5 +1,5 @@
 ### Console Hangman Game with English proverbs
-
+![plot](https://github.com/olakowalczyk/HangmanGame/blob/master/hangman.png)
 Run commands:
 ```
 cd "the_repo_folder_path"
