@@ -13,20 +13,21 @@ colors = {'orange' : '\033[33m',
 
 class Hangman:
 
+
     PROVERBS = Proverbs()
     HANGMAN_PICTURES = { 1 : '', 
-                2 : '/', 
-                3 : '/\\', 
-                4 : '|\n|\n|\n/\\', 
-                5 : '____\n|  \n|\n|\n/\\', 
-                6 : '____\n|  |\n|\n|\n/\\', 
-                7 : '____\n|  |\n|  o\n|\n/\\', 
-                8 : '____\n|  |\n|  o\n|  |\n/\\',
-                9 : '____\n|  |\n|  o\n| /|\n/\\', 
-                10 : '____\n|  |\n|  o\n| /|\\\n/\\', 
-                11 : '____\n|  |\n|  o\n| /|\\\n/\\/', 
-                12 : '____\n|  |\n|  o\n| /|\\\n/\\/ \\'
-              }
+                         2 : '/', 
+                         3 : '/\\', 
+                         4 : '|\n|\n|\n/\\', 
+                         5 : '____\n|  \n|\n|\n/\\', 
+                         6 : '____\n|  |\n|\n|\n/\\', 
+                         7 : '____\n|  |\n|  o\n|\n/\\', 
+                         8 : '____\n|  |\n|  o\n|  |\n/\\',
+                         9 : '____\n|  |\n|  o\n| /|\n/\\', 
+                        10 : '____\n|  |\n|  o\n| /|\\\n/\\', 
+                        11 : '____\n|  |\n|  o\n| /|\\\n/\\/', 
+                        12 : '____\n|  |\n|  o\n| /|\\\n/\\/ \\'
+                       }
 
 
     def __init__(self):
@@ -58,7 +59,7 @@ class Hangman:
 
     def provide_value(self):
         while True:
-            print(colors['blue'] + f"Already used letters: {' '.join(self.used_letters)}\n")
+            print(colors['blue'] + f"Already used letters: {' '.join(self.used_letters)}")
             value = input("\nProvide one letter: ")
             if value in letters and len(value) == 1:
                 if value not in self.used_letters:
@@ -69,9 +70,6 @@ class Hangman:
 
 
     def replace_with_letter(self, letter):
-        """ 
-            replace mask "_" with letter when letter match sentence letter
-        """
         sentence = list(self.sentence_to_guess)
         hidden_sentence = list(self.hidden_sentence_to_guess)
 
@@ -97,7 +95,7 @@ class Hangman:
 def play():
     hangman = Hangman()
     while hangman.chance <= hangman.max_chances:
-        print(f"\n-----   Remaining chances: {hangman.max_chances - hangman.chance + 1}  -----")
+        print(f"\n{'-'*20}  Remaining chances: {hangman.max_chances - hangman.chance + 1} {'-'*20}")
         letter = hangman.provide_value()
         hangman.replace_with_letter(letter)
 
