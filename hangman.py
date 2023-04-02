@@ -92,29 +92,31 @@ class Hangman:
         return sentence
 
 
-def play():
-    hangman = Hangman()
-    while hangman.chance <= hangman.max_chances:
-        print(f"\n{'-'*20}  Remaining chances: {hangman.max_chances - hangman.chance + 1} {'-'*20}")
-        letter = hangman.provide_value()
-        hangman.replace_with_letter(letter)
+    def play(self):
+        while self.chance <= self.max_chances:
+            print(f"\n{'-'*20}  Remaining chances: {self.max_chances - self.chance + 1} {'-'*20}")
+            letter = self.provide_value()
+            self.replace_with_letter(letter)
 
-        if hangman.hidden_sentence_to_guess == hangman.sentence_to_guess:
-            print(colors['green'] + f"\nCongratulations! :) That's the proverb: {hangman.sentence_to_guess}")
-            play_again()
-            break
-    else:
-        print(colors['red'] + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {hangman.sentence_to_guess}")
-        play_again()
+            if self.hidden_sentence_to_guess == self.sentence_to_guess:
+                print(colors['green'] + f"\nCongratulations! :) That's the proverb: {self.sentence_to_guess}")
+                Hangman.play_again()
+                break
+        else:
+            print(colors['red'] + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {self.sentence_to_guess}")
+            Hangman.play_again()
 
 
-def play_again():
-    key = input("Play again? (y) ")
-    if key == 'y':
-        play()
-    else:
-        print("Thanks for playing")
+    @staticmethod
+    def play_again():
+        key = input("Play again? (y) ")
+        if key == 'y':
+            hangman = Hangman()
+            hangman.play()
+        else:
+            print("Thanks for playing")
 
 
 if __name__ == "__main__":
-    play()
+    hangman = Hangman()
+    hangman.play()
