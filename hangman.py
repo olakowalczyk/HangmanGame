@@ -34,6 +34,7 @@ class Hangman:
         self._hidden_sentence_to_guess = Hangman.mask_sentence(self.sentence_to_guess)
         self.chance = 1
         self.max_chances = len(Hangman.HANGMAN_PICTURES) - 1
+        self.used_letters = []
         print(colors['blue'] + f"\nGuess the proverb: {self.hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
 
 
@@ -57,8 +58,11 @@ class Hangman:
 
     def provide_value(self):
         while True:
+            print(colors['blue'] + f"Already used letters: {' '.join(self.used_letters)}\n")
             value = input("\nProvide one letter: ")
             if value in letters and len(value) == 1:
+                if value not in self.used_letters:
+                    self.used_letters.append(value)
                 return value
             else:
                 print(colors['red'] +"It's not a letter. Please provide one letter")
