@@ -59,7 +59,7 @@ class Hangman:
 
     def provide_value(self):
         while True:
-            print(colors['blue'] + f"Already used letters: {' '.join(self.used_letters)}")
+            print(colors['blue'] + f"Already used letters: {' '.join(sorted(self.used_letters))}")
             value = input("\nProvide one letter: ")
             if value in letters and len(value) == 1:
                 if value not in self.used_letters:
