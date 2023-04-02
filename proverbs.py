@@ -1,8 +1,10 @@
 import requests
+from random import choice
 from bs4 import BeautifulSoup
 
 
 class Proverbs:
+
 
     def __init__(self):
         self.proverbs_list = Proverbs.get_proverbs_from_url()
@@ -28,6 +30,10 @@ class Proverbs:
         soup = BeautifulSoup(html_page, 'html.parser')
         web_elements = soup.findAll('p', attrs={'class': 'phrase-list'})
         return Proverbs._extract_proverbs(web_elements)
+
+
+    def get_random_proverb(self):
+        return choice(self.proverbs_list)
 
 
     @staticmethod

@@ -1,4 +1,3 @@
-import random
 from string import ascii_letters as letters
 from proverbs import Proverbs
 from colorama import init
@@ -14,7 +13,6 @@ colors = {'orange' : '\033[33m',
 class Hangman:
 
 
-    PROVERBS = Proverbs()
     HANGMAN_PICTURES = { 1 : '', 
                          2 : '/', 
                          3 : '/\\', 
@@ -30,8 +28,8 @@ class Hangman:
                        }
 
 
-    def __init__(self):
-        self._sentence_to_guess = random.choice(Hangman.PROVERBS)
+    def __init__(self, sentence_to_guess):
+        self._sentence_to_guess = sentence_to_guess
         self._hidden_sentence_to_guess = Hangman.mask_sentence(self.sentence_to_guess)
         self.chance = 1
         self.max_chances = len(Hangman.HANGMAN_PICTURES) - 1
@@ -111,12 +109,13 @@ class Hangman:
     def play_again():
         key = input("Play again? (y) ")
         if key == 'y':
-            hangman = Hangman()
+            hangman = Hangman((proverbs.get_random_proverb()))
             hangman.play()
         else:
             print("Thanks for playing")
 
 
 if __name__ == "__main__":
-    hangman = Hangman()
+    proverbs = Proverbs()
+    hangman = Hangman(proverbs.get_random_proverb())
     hangman.play()
