@@ -4,94 +4,115 @@ from proverbs import Proverbs
 from colorama import init
 init(autoreset=True)
 
-sentences = Proverbs()
-hangman = { 1 : '', 
-            2 : '/', 
-            3 : '/\\', 
-            4 : '|\n|\n|\n/\\', 
-            5 : '____\n|  \n|\n|\n/\\', 
-            6 : '____\n|  |\n|\n|\n/\\', 
-            7 : '____\n|  |\n|  o\n|\n/\\', 
-            8 : '____\n|  |\n|  o\n|  |\n/\\',
-            9 : '____\n|  |\n|  o\n| /|\n/\\', 
-            10 : '____\n|  |\n|  o\n| /|\\\n/\\', 
-            11 : '____\n|  |\n|  o\n| /|\\\n/\\/', 
-            12 : '____\n|  |\n|  o\n| /|\\\n/\\/ \\'
-          }
 colors = {'orange' : '\033[33m',
-          'green' : '\033[32m',
-          'red' : '\033[31m' ,
-          'purple' : '\033[35m}', 
-          'blue' : '\33[36m'}
+        'green' : '\033[32m',
+        'red' : '\033[31m' ,
+        'purple' : '\033[35m}', 
+        'blue' : '\33[36m'}
 
 
-def main():
-    sentence_to_guess = sentence()
-    hidden_sentence_to_guess = mask_sentence(sentence_to_guess)
-    print(colors['blue'] + f"\nGuess the proverb: {hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
-    chance = 1
-    max_chances = 11
+class Hangman:
 
-    while chance <= max_chances:
-        print(f"\n===== Remaining chances: {max_chances - chance + 1} =====")
-        letter = provide_value()
-        hidden_sentence_to_guess = replace_with_letter(letter, sentence_to_guess, hidden_sentence_to_guess)
-        print(colors['blue'] + f"\n{hidden_sentence_to_guess}\n")
+    PROVERBS = Proverbs()
+    HANGMAN_PICTURES = { 1 : '', 
+                2 : '/', 
+                3 : '/\\', 
+                4 : '|\n|\n|\n/\\', 
+                5 : '____\n|  \n|\n|\n/\\', 
+                6 : '____\n|  |\n|\n|\n/\\', 
+                7 : '____\n|  |\n|  o\n|\n/\\', 
+                8 : '____\n|  |\n|  o\n|  |\n/\\',
+                9 : '____\n|  |\n|  o\n| /|\n/\\', 
+                10 : '____\n|  |\n|  o\n| /|\\\n/\\', 
+                11 : '____\n|  |\n|  o\n| /|\\\n/\\/', 
+                12 : '____\n|  |\n|  o\n| /|\\\n/\\/ \\'
+              }
 
-        chance = chance if letter in sentence_to_guess else chance + 1
-        print(colors['orange'] + hangman[chance])
 
-        if hidden_sentence_to_guess == sentence_to_guess:
-            print(colors['green'] + f"\nCongratulations! :) That's the proverb: {sentence_to_guess}")
-            key = input("Play again? (y) ")
-            if key == 'y':
-                main()
+    def __init__(self):
+        self._sentence_to_guess = random.choice(Hangman.PROVERBS)
+        self._hidden_sentence_to_guess = Hangman.mask_sentence(self.sentence_to_guess)
+        self.chance = 1
+        self.max_chances = len(Hangman.HANGMAN_PICTURES) - 1
+        print(colors['blue'] + f"\nGuess the proverb: {self.hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
+
+
+    @property    
+    def sentence_to_guess(self):
+        return self._sentence_to_guess
+
+
+    @property    
+    def hidden_sentence_to_guess(self):
+        return self._hidden_sentence_to_guess
+
+
+    @hidden_sentence_to_guess.setter    
+    def hidden_sentence_to_guess(self, value):
+        if isinstance(value, str):
+            self._hidden_sentence_to_guess = value
+        else:
+            raise ValueError(f"Value is {type(value)} but it should be string")
+
+
+    def provide_value(self):
+        while True:
+            value = input("\nProvide one letter: ")
+            if value in letters and len(value) == 1:
+                return value
             else:
-                print("Thanks for playing")
-                break
+                print(colors['red'] +"It's not a letter. Please provide one letter")
+
+
+    def replace_with_letter(self, letter):
+        """ 
+            replace mask "_" with letter when letter match sentence letter
+        """
+        sentence = list(self.sentence_to_guess)
+        hidden_sentence = list(self.hidden_sentence_to_guess)
+
+        for idx, l in enumerate(sentence):
+            if l == letter:
+                hidden_sentence[idx] = letter
+            elif l == letter.capitalize():
+                hidden_sentence[idx] = letter.capitalize()
+        self.hidden_sentence_to_guess = ''.join(hidden_sentence)
+        self.chance = self.chance if letter in self.sentence_to_guess else self.chance + 1
+        print(colors['blue'] + f"\n{self.hidden_sentence_to_guess}\n")
+        print(colors['orange'] + Hangman.HANGMAN_PICTURES[self.chance])
+
+
+    @staticmethod
+    def mask_sentence(sentence):
+        for l in sentence:
+            if l.isalpha():
+                sentence = sentence.replace(l, '_')
+        return sentence
+
+
+def play():
+    hangman = Hangman()
+    while hangman.chance <= hangman.max_chances:
+        print(f"\n-----   Remaining chances: {hangman.max_chances - hangman.chance + 1}  -----")
+        letter = hangman.provide_value()
+        hangman.replace_with_letter(letter)
+
+        if hangman.hidden_sentence_to_guess == hangman.sentence_to_guess:
+            print(colors['green'] + f"\nCongratulations! :) That's the proverb: {hangman.sentence_to_guess}")
+            play_again()
+            break
     else:
-        print(colors['red'] + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {sentence_to_guess}")
-        key = input("Play again? (y) ")
-        if key == 'y':
-            main()
-        else:
-            print("Thanks for playing")
+        print(colors['red'] + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {hangman.sentence_to_guess}")
+        play_again()
 
 
-
-def replace_with_letter(letter, sentence, hidden_sentence):
-    """ 
-        replace mask "_" with letter when letter match sentence letter
-    """
-    sentence = list(sentence)
-    hidden_sentence = list(hidden_sentence)
-
-    for idx, l in enumerate(sentence):
-        if l == letter:
-            hidden_sentence[idx] = letter
-        elif l == letter.capitalize():
-            hidden_sentence[idx] = letter.capitalize()
-    return ''.join(hidden_sentence)
+def play_again():
+    key = input("Play again? (y) ")
+    if key == 'y':
+        play()
+    else:
+        print("Thanks for playing")
 
 
-def provide_value():
-    while True:
-        value = input("\nProvide one letter: ")
-        if value in letters and len(value) == 1:
-            return value
-        else:
-            print("It's not a letter. Please provide one letter")
-
-
-def sentence():
-    return random.choice(sentences)
-
-
-def mask_sentence(sentence):
-    for l in sentence:
-        if l.isalpha():
-            sentence = sentence.replace(l, '_')
-    return sentence
-
-
-main()
+if __name__ == "__main__":
+    play()
