@@ -1,10 +1,10 @@
 import random
 from string import ascii_letters as letters
-from getproverbs import get_proverbs
+from proverbs import Proverbs
 from colorama import init
 init(autoreset=True)
 
-sentences = get_proverbs()
+sentences = Proverbs()
 hangman = { 1 : '', 
             2 : '/', 
             3 : '/\\', 
