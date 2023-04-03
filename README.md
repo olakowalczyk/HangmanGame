@@ -1,13 +1,7 @@
 ### Console Hangman Game with English proverbs
-Run commands:
-```
-cd "the_repo_folder_path"
-pip install pip
-pip install -r requirements.txt
-```
 
 ### Run project
-Run the game by double click **hangman.py**
+Run the game with **hangman.py**
 
 ### Game rules
 1. You have 11 chances to guess the sentence.
