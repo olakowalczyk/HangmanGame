@@ -71,7 +71,8 @@ class Hangman:
 
     def display_current_status(self):
         Hangman.clear()
-        print(f"\n{'-'*20}  Remaining chances: {self.max_chances - self.used_chances} {'-'*20}")
+        self.remaining_chances = self.max_chances - self.used_chances
+        print(f"\nRemaining chances: {'▮'* self.remaining_chances}{'▯'* self.used_chances} {self.remaining_chances}")
         print(Fore.CYAN + f"\n{self.hidden_sentence_to_guess}\n")
         print(Fore.YELLOW + self.current_picture)
         print(Fore.CYAN + f"Already used letters: {' '.join(sorted(self.used_letters))}")
