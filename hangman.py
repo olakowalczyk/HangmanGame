@@ -1,13 +1,8 @@
 from string import ascii_letters as letters
-from proverbs import Proverbs
-from colorama import init
+from colorama import init, Fore
 init(autoreset=True)
 
-colors = {'orange' : '\033[33m',
-        'green' : '\033[32m',
-        'red' : '\033[31m' ,
-        'purple' : '\033[35m}', 
-        'blue' : '\33[36m'}
+from proverbs import Proverbs
 
 
 class Hangman:
@@ -24,7 +19,7 @@ class Hangman:
                          9 : '____\n|  |\n|  o\n| /|\n/\\', 
                         10 : '____\n|  |\n|  o\n| /|\\\n/\\', 
                         11 : '____\n|  |\n|  o\n| /|\\\n/\\/', 
-                        12 : '____\n|  |\n|  o\n| /|\\\n/\\/ \\'
+                        12 : '____\n|  |\n|  x\n| /|\\\n/\\/ \\'
                        }
 
 
@@ -34,7 +29,7 @@ class Hangman:
         self.chance = 1
         self.max_chances = len(Hangman.HANGMAN_PICTURES) - 1
         self.used_letters = []
-        print(colors['blue'] + f"\nGuess the proverb: {self.hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
+        print(Fore.CYAN + f"\nGuess the proverb: {self.hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
 
 
     @property    
@@ -57,14 +52,14 @@ class Hangman:
 
     def provide_value(self):
         while True:
-            print(colors['blue'] + f"Already used letters: {' '.join(sorted(self.used_letters))}")
+            print(Fore.CYAN + f"Already used letters: {' '.join(sorted(self.used_letters))}")
             value = input("\nProvide one letter: ")
             if value in letters and len(value) == 1:
                 if value not in self.used_letters:
                     self.used_letters.append(value)
                 return value
             else:
-                print(colors['red'] +"It's not a letter. Please provide one letter")
+                print(Fore.RED +"It's not a letter. Please provide one letter")
 
 
     def replace_with_letter(self, letter):
@@ -78,8 +73,8 @@ class Hangman:
                 hidden_sentence[idx] = letter.capitalize()
         self.hidden_sentence_to_guess = ''.join(hidden_sentence)
         self.chance = self.chance if letter in self.sentence_to_guess else self.chance + 1
-        print(colors['blue'] + f"\n{self.hidden_sentence_to_guess}\n")
-        print(colors['orange'] + Hangman.HANGMAN_PICTURES[self.chance])
+        print(Fore.CYAN + f"\n{self.hidden_sentence_to_guess}\n")
+        print(Fore.YELLOW + Hangman.HANGMAN_PICTURES[self.chance])
 
 
     @staticmethod
@@ -97,11 +92,11 @@ class Hangman:
             self.replace_with_letter(letter)
 
             if self.hidden_sentence_to_guess == self.sentence_to_guess:
-                print(colors['green'] + f"\nCongratulations! :) That's the proverb: {self.sentence_to_guess}")
+                print(Fore.GREEN + f"\nCongratulations! :) That's the proverb: {self.sentence_to_guess}")
                 Hangman.play_again()
                 break
         else:
-            print(colors['red'] + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {self.sentence_to_guess}")
+            print(Fore.RED + f"\nGame over! :( You've taken all your chances. That's the hidden proverb: {self.sentence_to_guess}")
             Hangman.play_again()
 
 
