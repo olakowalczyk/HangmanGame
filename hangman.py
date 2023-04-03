@@ -1,4 +1,4 @@
-from string import ascii_letters as letters
+from string import ascii_lowercase as letters
 from colorama import init, Fore
 init(autoreset=True)
 
@@ -24,17 +24,13 @@ class Hangman:
 
 
     def __init__(self, sentence_to_guess):
-        self._sentence_to_guess = sentence_to_guess
+        self.sentence_to_guess = sentence_to_guess
         self._hidden_sentence_to_guess = Hangman.mask_sentence(self.sentence_to_guess)
         self.chance = 1
         self.max_chances = len(Hangman.HANGMAN_PICTURES) - 1
+        self._possible_letters = ' '.join([l for l in letters])
         self.used_letters = []
-        print(Fore.CYAN + f"\nGuess the proverb: {self.hidden_sentence_to_guess} \nYou have 11 chances to guess the proverb")
-
-
-    @property    
-    def sentence_to_guess(self):
-        return self._sentence_to_guess
+        print(Fore.CYAN + f"\nGuess the proverb: \n\n{self.hidden_sentence_to_guess} \n\nYou have 11 chances to guess the proverb")
 
 
     @property    
@@ -44,19 +40,28 @@ class Hangman:
 
     @hidden_sentence_to_guess.setter    
     def hidden_sentence_to_guess(self, value):
-        if isinstance(value, str):
-            self._hidden_sentence_to_guess = value
-        else:
-            raise ValueError(f"Value is {type(value)} but it should be string")
+        self._hidden_sentence_to_guess = value
+
+
+    @property    
+    def possible_letters(self):
+        return self._possible_letters
+
+
+    @possible_letters.setter
+    def possible_letters(self, letter):
+        self._possible_letters = self._possible_letters.replace(letter, '')
 
 
     def provide_value(self):
         while True:
             print(Fore.CYAN + f"Already used letters: {' '.join(sorted(self.used_letters))}")
+            print(f"Available letters: {self.possible_letters}")
             value = input("\nProvide one letter: ")
             if value in letters and len(value) == 1:
                 if value not in self.used_letters:
                     self.used_letters.append(value)
+                    self.possible_letters = value
                 return value
             else:
                 print(Fore.RED +"It's not a letter. Please provide one letter")
