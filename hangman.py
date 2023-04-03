@@ -37,8 +37,6 @@ class Hangman:
 
     def provide_value(self):
         while True:
-            print(Fore.CYAN + f"Already used letters: {' '.join(sorted(self.used_letters))}")
-            print(f"Available letters: {self.possible_letters}")
             value = input("\nProvide one letter: ")
             if value in letters and len(value) == 1:
                 if value not in self.used_letters:
@@ -76,10 +74,11 @@ class Hangman:
         print(f"\n{'-'*20}  Remaining chances: {self.max_chances - self.used_chances} {'-'*20}")
         print(Fore.CYAN + f"\n{self.hidden_sentence_to_guess}\n")
         print(Fore.YELLOW + self.current_picture)
+        print(Fore.CYAN + f"Already used letters: {' '.join(sorted(self.used_letters))}")
+        print(f"Available letters: {self.possible_letters}")
 
 
     def play(self):
-
         while self.used_chances < self.max_chances:
             self.display_current_status()
             letter = self.provide_value()
